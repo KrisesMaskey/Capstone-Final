@@ -1,0 +1,249 @@
+{% load otree static %}
+
+{{ block title }} 
+{{ endblock }}
+
+{{ block script }}
+<script src="{% static 'global/js/helper.js' %}"></script>
+<script>
+function quizHandler(e){
+    e.preventDefault();
+    const q1 = document.querySelector('input[name="time"]:checked');
+    const q2 = document.querySelector('input[name="opponent"]:checked');
+
+    if (q1 && q2) {
+        liveSend({"val": 2,"answers": [q1.value, q2.value]});
+    } else {
+        alert('Please select answers for all questions.');
+    }
+}
+</script>
+{{ endblock }}
+
+{{ block styles}}
+<link rel="stylesheet" href="{% static 'global/css/styles.css' %}"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{{ endblock }}
+
+{{ block content }}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <ul id="navbar" class="navbar">
+            <li><a href="#tab1">Instructions</a></li>
+            <!-- <li><a href="#tab2">Example</a></li> -->
+            <li><a href="#tab3">Quiz</a></li>
+            <li><a href="#tab4">Failed</a></li>
+        </ul>
+        
+        <!-- <button onclick="move(event, -1)">Back</button> -->
+        <!-- <button onclick="move(event, 1)">Next</button> -->
+
+        <!-- Tab Contents -->
+        
+        <!-- 1. Instructions -->
+        <div id="tab1" class="tab-content active">
+            <div id="consent-container" style="max-width: 95%; margin-top: 1rem;">
+                <div class="heading">
+                    <h1>Instructions</h1>
+                </div>
+                
+                <div class="instruction-content">
+                    <p>
+                        Please read the rules carefully, since  
+                        <span style="color: red;">you will be asked questions to test your understanding. </span>
+                    </p>
+                </div>
+                
+                <div class="all-activity-container">
+                    <div class="row">
+                        <div class="activity-child">
+                            <div class="subheading">
+                                <h3>Activity</h3>
+                            </div>
+
+                            <div class="activity-content">
+                                <ul>
+                                    <li>There will be two anonymous participants: the <span style="color: red;">Proposer</span> and the <span style="color: blue;">Receiver</span>.</li>
+                                    <li>You will be <b>randomly assigned</b> to either the <span style="color: red;">Proposer</span> or the <span style="color: blue;">Receiver</span>.</li>
+                                    <li>The <span style="color: red;">Proposer</span> gets to choose between two actions: <b>‘A’</b> and <b>‘B’</b>. </li>
+                                        <ul>
+                                            <li>
+                                                If the <span style="color: red;">Proposer</span> chooses <b>‘A’</b>: 
+                                                <ul>
+                                                    <li>
+                                                    The <span style="color: red;">Proposer</span> gets <span style="color: red;">${{ B_X1 }}</span>
+                                                </li>
+                                                <li>
+                                                    The <span style="color: blue;">Receiver</span> gets <span style="color: blue;">${{ B_Y1 }}</span>
+                                                </li>
+                                                </ul>
+                                                
+                                            </li>
+
+                                            <li>
+                                                If the <span style="color: red;">Proposer</span> chooses <b>‘B’</b>: 
+                                                <ul>
+                                                    <li>
+                                                        The <span style="color: red;">Proposer</span> gets <span style="color: red;">${{ B_X2 }}</span>   
+                                                    </li>
+                                                    <li>
+                                                        The <span style="color: blue;">Receiver</span> gets <span style="color: blue;">${{ B_Y2 }}</span>
+            
+                                                    </li>                                             
+                                                </ul>
+                                               
+                                            </li>
+                                        </ul>
+                                    <li>As for the <span style="color: blue;"> Receiver</span>, they do not get to choose any action, and their payoff is entirely determined by the chosen action of the <span style="color: red;"> Proposer</span>.</li>
+                                    <li>The experiment is <b>not repeated</b>; it consists of a single interaction.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="activity-child">
+                            <div class="subheading">
+                                <h3>Additional Information</h3>
+                            </div>
+
+                            <div class="activity-content">
+                                <span>Here are additional information regarding the activity:</span>
+                                <ul>
+                                    <li>
+                                        At the end of the activity, you will receive:
+                                        <ul>
+                                            <li>Your <b>show-up fee</b> of $ {{ showup_fee }}.</li>
+                                            <li>Your <b>total payoff</b> from the activity.</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        If you happen to be a <span style="color: red;">proposer</span>, you will be given 
+                                        <b>{{max_decide_time}} seconds</b> to decide which action to take. <b>If you fail to choose an action within the 
+                                            time limit</b>, the activity will end, and you will only receive your showup fee.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>    
+                
+                <div class="flex-end">
+                    <button id="accept-button" onclick="move(event, 1)">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Quiz -->
+        <div id="tab3" class="tab-content">
+            <div id="consent-container" style="margin-top: 1rem;">
+                <div class="backButton">
+                    <img src="{% static 'global/assets/left-arrow.png' %}" alt="back" onclick="move(event, -1)"></img>
+                </div>
+
+                <div class="heading">
+                    <h1>Quiz</h1>
+                </div>
+               
+                <div class="instruction-content">
+                    <p>
+                        Please answer the following questions about the activity rules. 
+                        <span style="color: red;"> If you fail twice to answer all of them correctly, you will not be able to participate in the activity.</span>
+                    </p>
+    
+                  
+                    <p>
+                        If you need, <b>you can re-examine the instructions</b> by clicking on the arrow button on the top-left corner.
+                    </p>    
+    
+                    <div class="demarkLine"></div>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="question">
+                        What action will result in <b>equal</b> payoff division among the participants?
+                    </div>
+                    <div class="options">
+                      <div class="option">
+                        <input type="radio" name="time" value="1" id="time60">
+                        <label for="time60">The <span style="color: blue;">receiver</span> chooses <b>A</b></label>
+                      </div>
+                      <div class="option">
+                        <input type="radio" name="time" value="2" id="time100">
+                        <label for="time100">The <span style="color: blue;">receiver</span> chooses <b>B</b></label>
+                      </div>
+                      <div class="option">
+                        <input type="radio" name="time" value="3" id="time120">
+                        <label for="time120">The <span style="color: red;">proposer</span> chooses <b>A</b></label>
+                      </div>
+                      <div class="option">
+                        <input type="radio" name="time" value="4" id="timeUnlimited">
+                        <label for="timeUnlimited">The <span style="color: red;">proposer</span> chooses <b>B</b></label>
+                      </div>
+                    </div>
+
+                    <div class="question">
+                        What action will result in <b>unequal</b> payoff division among the participants?
+                    </div>
+                    <div class="options">
+                      <div class="option">
+                        <input type="radio" name="opponent" value="1" id="opponentBot">
+                        <label for="opponentBot">The <span style="color: blue;">receiver</span> chooses <b>A</b></label>
+                      </div>
+                      <div class="option">
+                        <input type="radio" name="opponent" value="2" id="opponentPerson">
+                        <label for="opponentPerson">The <span style="color: blue;">receiver</span> chooses <b>B</b></label>
+                      </div>
+                      <div class="option">
+                        <input type="radio" name="opponent" value="3" id="opponentBotOrPerson">
+                        <label for="opponentBotOrPerson">The <span style="color: red;">proposer</span> chooses <b>A</b></label>
+                      </div>
+                      <div class="option">
+                        <input type="radio" name="opponent" value="4" id="opponentNoOpponent">
+                        <label for="opponentNoOpponent">The <span style="color: red;">proposer</span> chooses <b>B</b></label>
+                      </div>
+                    </div>                    
+                </div>
+
+                <div class="flex-end">
+                    <button id="quiz-button" onclick="quizHandler(event)">Submit</button>
+                </div>   
+                <button id="invisibleButton">Next</button>          
+            </div>
+        </div>
+        
+        <!-- 6. Failed the Quiz-->
+        <div id="tab4" class="tab-content">
+            
+            <!-- Failed the Quiz once -->
+            <div id="quiz_failed_once">               
+                <div id="consent-container">
+                    <div class="instruction-content">
+                        <p>
+                        Unfortunately, <b>you failed</b> to answer all the questions correctly. <span style="color: red;">You have one more attempt, but if you fail 
+                        to answer all questions correctly, you will not be able to participate in the activity. </span>
+                        </p>
+                        
+                        <p>
+                            If you need, <b>you can re-examine the instructions</b> by clicking the arrow button on the top-left corner of the Quiz screen.
+                        </p> 
+                    </div>   
+
+                    <div class="flex-end">
+                        <button id="accept-button" onclick="move(event, -1)">Retry</button>
+                    </div>
+                </div> 
+            </div>
+        </div>
+
+        <div id="footer">
+            <p>&copy; 2024 Krises Maskey</p>
+        </div>
+
+    </body>
+
+</html>
+{{ endblock }}

@@ -1,0 +1,174 @@
+{% load otree static %}
+
+{{ block title }} 
+{{ endblock }}
+
+{{ block script }}
+<script>
+    // Timer Logic
+    let start = sessionStorage.getItem('start') ? Number(sessionStorage.getItem('start')) : Date.now();
+    sessionStorage.setItem('start', start.toString());
+
+    let activityTimer = document.getElementById('countdown');
+    
+    function updateWaitTime() {
+        let now = Date.now();
+        let diff = Math.floor((now - start) / 1000);  // difference in seconds
+        timeleft = js_vars.timeout - diff
+        let minutes = Math.floor(timeleft / 60);
+        let seconds = timeleft % 60;
+        activityTimer.textContent = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+
+        if(timeleft <= 0){
+            sessionStorage.removeItem('start');
+            clearInterval(countdownTimer);
+        }
+    }
+
+    function handleNext(event) {
+        event.preventDefault();
+        // Get the value of the form field
+        let playerChoice = document.querySelector("#id_player_choice").value.trim();
+
+        // Check if the value is null or empty
+        if (playerChoice !== ''){
+            sessionStorage.removeItem('start');
+        }
+        
+        form.submit();
+    }
+        
+    // Content Loaded
+    document.addEventListener("DOMContentLoaded", (event) => {
+        let countdownTimer = setInterval(updateWaitTime, 1000);
+    });
+    
+</script>
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{% static 'global/css/styles.css' %}"/>
+{{ endblock }}
+
+{{ block content }}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="consent-container">
+            <!-- Sequential Dictator Game -->
+            <div class="heading">
+                 <h1>Activity</h1>
+            </div> 
+
+            <div class="activity-div">
+                <p>
+                    You happened to be chosen as <span style="color: red;">{{ role }}</span>, and you happened to be paired with another <b>{{ op_nature }}</b> who will be 
+                    taking the role of <span style="color: red;">{{ op_role }}</span>. Another <b>MTurker</b> happened to be chosen as the <span style="color: blue;">Receiver</span>.  
+                </p>
+
+                {% if role == 'Proposer_1' %}
+                    <p style="color: green;">IMPORTANT: <span style="color: red;">Proposers</span> make their 
+                        decisions <b style="color: green;">sequentially.</b> In other words, <span style="color: red;">Proposer_1</span> 
+                        chooses their action first. Afterwards, <span style="color: red;">Proposer_2</span> is informed about <span style="color: red;">Proposer_1</span>'s
+                        choice, and then gets to choose their own action. 
+                    </p>
+
+                    {% if isPassive == True %}
+                    <p>
+                        REMEMBER: The <span style="color: blue;">receiver</span> is <b>completely passive</b>, i.e., they have no choice but to accept 
+                        the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> and <span style="color: red;">Proposer_2</span>.
+                    
+                    </p>
+                    {% elif isPassive == False %}
+                    <p>
+                        REMEMBER: The <span style="color: blue;">receiver</span> can <b>reject</b> the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> 
+                        and <span style="color: red;">Proposer_2</span>. If the <span style="color: blue;">receiver</span> rejects, the <span style="color: blue;">receiver</span> 
+                        gets no payoff, but this has no effect on the <span style="color: red;">proposers'</span> payoff.               
+                    </p>
+                    {% endif %}
+
+                {% elif role == 'Proposer_2' %}
+                    <p>IMPORTANT: <span style="color: red;">Proposer_1</span> has already chosen action <b>{{ op_choice }}</b>.</p>
+
+                    {% if isPassive == True %}
+                    <p>
+                        REMEMBER: The <span style="color: blue;">receiver</span> is <b>completely passive</b>, i.e., they have no choice but to accept 
+                        the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> and <span style="color: red;">Proposer_2</span>.
+                    
+                    </p>
+                    {% elif isPassive == False %}
+                    <p>
+                        REMEMBER: The <span style="color: blue;">receiver</span> can <b>reject</b> the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> 
+                        and <span style="color: red;">Proposer_2</span>. If the <span style="color: blue;">receiver</span> rejects, the <span style="color: blue;">receiver</span> 
+                        gets no payoff, but this has no effect on the <span style="color: red;">proposers'</span> payoff.               
+                    </p>
+                    {% endif %}
+
+                {% endif %}
+                
+                <p>
+                    Please choose between actions: <b>‘X’</b> and <b>‘Y’</b>. Remember:
+                    <ul>
+                        <li>
+                            If <span style="color: red;">Proposer_1</span> chooses <b>‘X’</b> and <span style="color: red;">Proposer_2</span> chooses <b>‘X’</b>: 
+                            <ul>
+                                <li>
+                                    <span style="color: red;">Proposer_1</span> gets <span style="color: red;">${{ AA_x }}</span>
+                                </li>
+                                <li>
+                                    <span style="color: red;">Proposer_2</span> gets <span style="color: red;">${{ AA_y }}</span>
+                                </li>
+                                <li>
+                                    The <span style="color: blue;">Receiver</span> gets <span style="color: blue;">${{ AA_z }}</span>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            If one of the <span style="color: red;">proposers</span> chooses <b>‘Y’</b> or both of them choose <b>‘Y’</b>: 
+                            <ul>
+                                <li>
+                                    <span style="color: red;">Proposer_1</span> gets <span style="color: red;">${{ AB_x }}</span>
+                                </li>
+                                <li>
+                                    <span style="color: red;">Proposer_2</span> gets <span style="color: red;">${{ AB_y }}</span>
+                                </li>
+                                <li>
+                                    The <span style="color: blue;">Receiver</span> gets <span style="color: blue;">${{ AB_z }}</span>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </p>
+
+                <div class="form-fields">
+                    <div class="form-elements" style="display:flex; align-items: center; justify-items: center;">
+                        <div>Please choose action <strong>X</strong> or <strong>Y</strong>:</div> 
+                        <div class="drop-down" style="margin-left: 1rem;">
+                            {% formfield player.player_choice label=form_label %}
+                        </div>      
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="timer-div">
+                <span>Time remainning</span>
+                <span><b style="color: red;">(Please decide before the timer finishes!)</b></span>
+                <div id="countdown" style="margin-top: 0.5rem; font-weight: bolder; font-size: 25px;">01:00</div>
+            </div>
+
+            <div class="flex-end">
+                <button class="buttonClass" onclick="handleNext(event)">Next</button>
+            </div>
+        </div>
+
+
+        <div id="footer">
+            <p>&copy; 2024 Krises Maskey</p>
+        </div>
+    </body>
+</html>
+{{ endblock }}

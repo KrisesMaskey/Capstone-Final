@@ -1,0 +1,347 @@
+{% load otree static %}
+
+{{ block title }} 
+{{ endblock }}
+
+{{ block script }}
+<script src="{% static 'global/js/helper.js' %}"></script>
+<script>
+function quizHandler(e){
+    e.preventDefault();
+    const q1 = document.querySelector('input[name="nature"]:checked');
+    const q2 = document.querySelector('input[name="chooseAction"]:checked');
+    const q3 = [...document.querySelectorAll('input[name="equalPayoff"]:checked')].map(item => item.value);
+    const q4 = [...document.querySelectorAll('input[name="unequalPayoff"]:checked')].map(item => item.value);
+    const q5 = document.querySelector('input[name="receiverDescription"]:checked');
+    const q6 = document.querySelector('input[name="proposer2Info"]:checked');
+
+    if (q1 && q2 && q3 && q4 && q5 && q6) {
+        liveSend({"val": 2,"answers": [q1.value, q2.value, q3, q4, q5.value, q6.value]});
+    } else {
+        alert('Please select answers for all questions.');
+    }
+}
+</script>
+{{ endblock }}
+
+{{ block styles}}
+<link rel="stylesheet" href="{% static 'global/css/styles.css' %}"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{{ endblock }}
+
+{{ block content }}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <ul id="navbar" class="navbar">
+            <li><a href="#tab1">Instructions</a></li>
+            <!-- <li><a href="#tab2">Example</a></li> -->
+            <li><a href="#tab3">Quiz</a></li>
+            <li><a href="#tab4">Failed</a></li>
+        </ul>
+        
+        <!-- <button onclick="move(event, -1)">Back</button> -->
+        <!-- <button onclick="move(event, 1)">Next</button> -->
+
+        <!-- Tab Contents -->
+        
+        <!-- 1. Instructions -->
+        <div id="tab1" class="tab-content active">
+            <div id="consent-container" style="max-width: 95%; margin-top: 1rem;">
+                <div class="heading">
+                    <h1>Instructions</h1>
+                </div>
+                
+                <div class="instruction-content">
+                    <p>
+                        Please read the rules carefully, since  
+                        <span style="color: red;">you will be asked questions to test your understanding. </span>
+                    </p>
+                </div>
+                
+                <div class="all-activity-container">
+                    <div class="row">
+                        <div class="activity-child">
+                            <div class="subheading">
+                                <h3>Activity</h3>
+                            </div>
+
+                            <div class="activity-content">
+                                <ul>
+                                    <li>There will be three anonymous participants: <span style="color: red;">Proposer_1</span>, <span style="color: red;">Proposer_2</span>, and the <span style="color: blue;">Receiver</span>.</li>
+                                    <li>You will be <b>randomly assigned</b> to either <span style="color: red;">Proposer_1</span>, <span style="color: red;">Proposer_2</span>, or the <span style="color: blue;">Receiver</span>.</li>
+                                    <li>Each <span style="color: red;">proposer</span> gets to choose between two actions: <b>‘X’</b> and <b>‘Y’</b>. </li>
+                                        <ul>
+                                            <li>
+                                                If <span style="color: red;">Proposer_1</span> chooses <b>‘X’</b> and <span style="color: red;">Proposer_2</span> chooses <b>‘X’</b>: 
+                                                <ul>
+                                                    <li>
+                                                        <span style="color: red;">Proposer_1</span> gets <span style="color: red;">${{ SI_X1 }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span style="color: red;">Proposer_2</span> gets <span style="color: red;">${{ SI_X1 }}</span>
+                                                    </li>
+                                                    <li>
+                                                        The <span style="color: blue;">Receiver</span> gets <span style="color: blue;">${{ SI_Y1 }}</span>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                If one of the <span style="color: red;">proposers</span> chooses <b>‘Y’</b> or both of them choose <b>‘Y’</b>: 
+                                                <ul>
+                                                    <li>
+                                                        <span style="color: red;">Proposer_1</span> gets <span style="color: red;">${{ SI_X2 }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span style="color: red;">Proposer_2</span> gets <span style="color: red;">${{ SI_X2 }}</span>
+                                                    </li>
+                                                    <li>
+                                                        The <span style="color: blue;">Receiver</span> gets <span style="color: blue;">${{ SI_Y2 }}</span>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    <li style="color: green;">IMPORTANT: <span style="color: red;">Proposers</span> make their 
+                                        decisions <b style="color: green;">sequentially.</b> In other words, <span style="color: red;">Proposer_1</span> 
+                                        chooses their action first. Afterwards, <span style="color: red;">Proposer_2</span> is informed about <span style="color: red;">Proposer_1</span>'s
+                                        choice, and then gets to choose their own action. 
+                                    </li>
+                                    <li>The <span style="color: blue;">Receiver</span>, <b>knows</b> that the <span style="color: red;">proposers</span> 
+                                        choose their actions sequentially, and <b>knows</b> which action was chosen by <span style="color: red;">Proposer_1</span> 
+                                        and which action was chosen by <span style="color: red;">Proposer_2</span>.
+                                    </li>
+                                    {% if isPassive == True %}
+                                    <li>
+                                        The <span style="color: blue;">receiver</span> is <b>completely passive</b>, i.e., they have no choice but to accept 
+                                        the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> and <span style="color: red;">Proposer_2</span>.
+                                    </li>
+                                    {% elif isPassive == False %}
+                                    <li>
+                                        The <span style="color: blue;">receiver</span> can <b>reject</b> the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> 
+                                        and <span style="color: red;">Proposer_2</span>. If the <span style="color: blue;">receiver</span> rejects, the <span style="color: blue;">receiver</span> 
+                                        gets no payoff, but this has no effect on the <span style="color: red;">proposers'</span> payoff.
+                                    </li>
+                                    {% endif %}
+                                    <li>The experiment is <b>not repeated</b>; it consists of a single interaction.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="activity-child">
+                            <div class="subheading">
+                                <h3>Additional Information</h3>
+                            </div>
+
+                            <div class="activity-content">
+                                <span>Here are additional information regarding the activity:</span>
+                                <ul>
+                                    <li>The <span style="color: blue;">Receiver</span> will be an MTurk worker.</li>
+                                    <li>A <span style="color: red;">proposer</span> can either be a <b>bot</b> or a <b>person</b>.</li>
+                                    <ul>
+                                        <li>A <b>bot</b> is a computer program that makes decisions.</li>
+                                        <li>A <b>person</b> is another MTurk worker.</li>
+                                    </ul>
+                                    <li>
+                                        At the end of the activity, you will receive:
+                                        <ul>
+                                            <li>Your <b>show-up fee</b> of $ {{ showup_fee }}.</li>
+                                            <li>Your <b>total payoff</b> from the activity.</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        If you happen to be a <span style="color: red;">proposer</span>, you will be given 
+                                        <b>{{max_decide_time}} seconds</b> to decide which action to take. <b>If you fail to choose an action within the 
+                                            time limit</b>, the activity will end, and you will only receive your showup fee.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>    
+                
+                <div class="flex-end">
+                    <button id="accept-button" onclick="move(event, 1)">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Quiz -->
+        <div id="tab3" class="tab-content">
+            <div id="consent-container" style="margin-top: 1rem;">
+                <div class="backButton">
+                    <img src="{% static 'global/assets/left-arrow.png' %}" alt="back" onclick="move(event, -1)"></img>
+                </div>
+
+                <div class="heading">
+                    <h1>Quiz</h1>
+                </div>
+               
+                <div class="instruction-content">
+                    <p>
+                        Please answer the following questions about the activity rules. 
+                        <span style="color: red;"> If you fail twice to answer all of them correctly, you will not be able to participate in the activity.</span>
+                    </p>
+    
+                  
+                    <p>
+                        If you need, <b>you can re-examine the instructions</b> by clicking on the arrow button on the top-left corner.
+                    </p>    
+    
+                    <div class="demarkLine"></div>
+                </div>
+
+                <div class="quiz-container">
+
+                    <div class="question">
+                        What is the <b>nature</b> of the <span style="color: red;">proposers</span>?
+                    </div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="nature" value="1" id="natureBot">
+                            <label for="natureBot">Each <span style="color: red;">proposer</span> will be a <b>bot</b></label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="nature" value="2" id="naturePerson">
+                            <label for="naturePerson">Each <span style="color: red;">proposer</span> will be a <b>person</b></label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="nature" value="3" id="natureBotPerson">
+                            <label for="natureBotPerson">Each <span style="color: red;">proposer</span> can either be <b>a bot or a person</b></label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        How will the <span style="color: red;">proposers</span> <b>choose their action</b>?
+                    </div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="chooseAction" value="1" id="chooseSimultaneously">
+                            <label for="chooseSimultaneously">The two <span style="color: red;">proposers</span> choose their action <b>simultaneously</b></label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="chooseAction" value="2" id="chooseSequentially">
+                            <label for="chooseSequentially">The two <span style="color: red;">proposers</span> choose their action <b>sequentially</b></label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="chooseAction" value="3" id="chooseRandomly">
+                            <label for="chooseRandomly">The two <span style="color: red;">proposers</span> choose their action <b>randomly</b></label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        What combination of actions will result in <b>equal</b> payoff division among all three participants (Select all that apply)?
+                    </div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="checkbox" name="equalPayoff" value="1" id="equalPayoffX1Y1">
+                            <label for="equalPayoffX1Y1"><span style="color: red;">Proposer_1</span> chooses <b>X</b>, and <span style="color: red;">Proposer_2</span> chooses <b>X</b></label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="equalPayoff" value="2" id="equalPayoffX1Y2">
+                            <label for="equalPayoffX1Y2"><span style="color: red;">Proposer_1</span> chooses <b>X</b>, and <span style="color: red;">Proposer_2</span> chooses <b>Y</b></label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="equalPayoff" value="3" id="equalPayoffY1X2">
+                            <label for="equalPayoffY1X2"><span style="color: red;">Proposer_1</span> chooses <b>Y</b>, and <span style="color: red;">Proposer_2</span> chooses <b>X</b></label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="equalPayoff" value="4" id="equalPayoffY1Y2">
+                            <label for="equalPayoffY1Y2"><span style="color: red;">Proposer_1</span> chooses <b>Y</b>, and <span style="color: red;">Proposer_2</span> chooses <b>Y</b></label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        What combination of actions will result in <b>unequal</b> payoff division among all three participants (Select all that apply)?
+                    </div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="checkbox" name="unequalPayoff" value="1" id="unequalPayoffX1X2">
+                            <label for="unequalPayoffX1X2"><span style="color: red;">Proposer_1</span> chooses <b>X</b>, and <span style="color: red;">Proposer_2</span> chooses <b>X</b></label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="unequalPayoff" value="2" id="unequalPayoffX1Y2">
+                            <label for="unequalPayoffX1Y2"><span style="color: red;">Proposer_1</span> chooses <b>X</b>, and <span style="color: red;">Proposer_2</span> chooses <b>Y</b></label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="unequalPayoff" value="3" id="unequalPayoffY1X2">
+                            <label for="unequalPayoffY1X2"><span style="color: red;">Proposer_1</span> chooses <b>Y</b>, and <span style="color: red;">Proposer_2</span> chooses <b>X</b></label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="unequalPayoff" value="4" id="unequalPayoffY1Y2">
+                            <label for="unequalPayoffY1Y2"><span style="color: red;">Proposer_1</span> chooses <b>Y</b>, and <span style="color: red;">Proposer_2</span> chooses <b>Y</b></label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        What is the correct <b>description</b> of the <span style="color: blue;">Receiver</span>?
+                    </div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="receiverDescription" value="1" id="receiverAccept">
+                            <label for="receiverAccept">The <span style="color: blue;">receiver</span> has <b>no choice but to accept</b> the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> and <span style="color: red;">Proposer_2</span></label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="receiverDescription" value="2" id="receiverReject">
+                            <label for="receiverReject">The <span style="color: blue;">receiver</span> <b>can reject</b> the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> and <span style="color: red;">Proposer_2</span>. If the <span style="color: blue;">receiver</span> rejects, the <span style="color: blue;">receiver</span> gets no payoff, but this has no effect on the <span style="color: red;">proposers</span>’ payoff</label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        What <b>information</b> does <span style="color: red;">Proposer_2</span> have before choosing their action?
+                    </div>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="proposer2Info" value="1" id="proposer2KnowsAction">
+                            <label for="proposer2KnowsAction"><span style="color: red;">Proposer_2</span> <b>gets to know</b> the action chosen by <span style="color: red;">Proposer_1</span></label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="proposer2Info" value="2" id="proposer2DoesNotKnowAction">
+                            <label for="proposer2DoesNotKnowAction"><span style="color: red;">Proposer_2</span> <b>does not get to know</b> the action chosen by <span style="color: red;">Proposer_1</span></label>
+                        </div>
+                    </div>                  
+                                   
+                </div>
+
+                <div class="flex-end">
+                    <button id="quiz-button" onclick="quizHandler(event)">Submit</button>
+                </div>   
+                <button id="invisibleButton">Next</button>          
+            </div>
+        </div>
+        
+        <!-- 6. Failed the Quiz-->
+        <div id="tab4" class="tab-content">
+            
+            <!-- Failed the Quiz once -->
+            <div id="quiz_failed_once">               
+                <div id="consent-container">
+                    <div class="instruction-content">
+                        <p>
+                        Unfortunately, <b>you failed</b> to answer all the questions correctly. <span style="color: red;">You have one more attempt, but if you fail 
+                        to answer all questions correctly, you will not be able to participate in the activity. </span>
+                        </p>
+                        
+                        <p>
+                            If you need, <b>you can re-examine the instructions</b> by clicking the arrow button on the top-left corner of the Quiz screen.
+                        </p> 
+                    </div>   
+
+                    <div class="flex-end">
+                        <button id="accept-button" onclick="move(event, -1)">Retry</button>
+                    </div>
+                </div> 
+            </div>
+        </div>
+
+        <div id="footer">
+            <p>&copy; 2024 Krises Maskey</p>
+        </div>
+
+    </body>
+
+</html>
+{{ endblock }}

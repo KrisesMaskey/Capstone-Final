@@ -1,0 +1,40 @@
+{% load otree static %}
+
+{{ block title }} 
+{{ endblock }}
+
+{{ block script }}
+{{ endblock }}
+
+{{ block styles}}
+<link rel="stylesheet" href="{% static 'global/css/styles.css' %}"/>
+{{ endblock }}
+
+{{ block content }}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div id="consent-container">
+            <div class="heading">
+                <h1>Submission Code</h1>
+            </div>
+            
+            <div class="activity-div">
+                <label>Your Mturk Code is:</label>
+                <span><b>{{submission_code}}</b></span>
+            </div>
+            
+            <div class="endText" style="display:block; margin: 1rem auto; width: fit-content;">
+                <p>Thank you for your participation, and goodbye! You can close the tab now.</p> 
+            </div>
+            
+        </div>
+        <div id="footer">
+            <p>&copy; 2024 Krises Maskey</p>
+          </div>
+    </body>
+</html>
+{{ endblock }}

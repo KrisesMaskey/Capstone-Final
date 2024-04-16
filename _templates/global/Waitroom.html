@@ -1,0 +1,79 @@
+{% extends "otree/WaitPage.html" %}
+
+{% load otree static %}
+
+{{ block title }} 
+Please wait...
+{{ endblock }}
+
+{{ block script }}
+<script>
+    let timeleft = js_vars.time_left * 60;
+    let starttime = 0
+    let countdownTimer = setInterval(function(){
+        starttime++;
+        let minutes = Math.floor(starttime / 60);
+        let seconds = starttime % 60;
+        document.getElementById("countdown").textContent = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+        if(starttime >= timeleft)
+            clearInterval(countdownTimer);
+    }, 1000);
+
+    let delay = js_vars.wait_time;
+    setTimeout(function() {
+        document.getElementById("message").style.display = "block";
+        document.getElementById("wait-screen").style.display = "none";
+        const audio = document.getElementById('beep');
+        audio.play();
+    }, delay * 1000);
+
+    function next() {
+        let form = document.createElement('form');
+        document.body.appendChild(form);
+        form.method = 'post';
+        form.submit();
+    }
+</script>
+{{ endblock }}
+
+{{ block styles}}
+    <link rel="stylesheet" href="{% static 'global/css/styles.css' %}"/>
+{{ endblock }}
+
+{{ block content }}
+<html>
+    <body>
+        <div>
+            <div id="wait-screen">
+                <p>The activity will start once the other participant has joined, at which point a beep will alert you. If this doesn’t 
+                    happen within 5 minutes, you’ll receive the show-up fee.</p>
+                <br/> 
+                <p style="color: red;">Please don’t leave this page while waiting!</p>
+                <div id="timer-div" class="timerContainer" style="display: flex; justify-content: center;">
+                    <p>Time spent waiting:</p>
+                    <div id="countdown" style="margin-left: 0.5rem;">00:00</div>
+                </div>
+            </div>            
+            
+            <div id="message" style="display: none;">
+                <audio id="beep">
+                    <source src="{% static 'global/assets/beep.mp3' %}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+
+                <p>We are now ready to start the activities!</p>
+                <p style="color: red;">You have been randomly selected as the <b>{{role}}</b> in this activity.</p>
+                
+                <div class="flex-end">
+                    <button class="buttonClass" onclick="next()">Start</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="footer">
+            <p>&copy; 2024 Krises Maskey</p>
+        </div>
+    </body>
+</html>
+
+{{ endblock }}

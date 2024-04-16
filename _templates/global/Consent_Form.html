@@ -1,0 +1,119 @@
+{% load otree static %}
+
+{{ block title }} 
+{{ endblock }}
+
+{{ block script }}
+<script>
+    // JavaScript to enable the button when scrolled to the bottom
+    var contentDiv = document.getElementById("content");
+    var acceptButton = document.getElementById("accept-button");
+
+    contentDiv.addEventListener("scroll", function() {
+        if (contentDiv.scrollHeight - contentDiv.scrollTop - 10 < contentDiv.clientHeight) {
+            acceptButton.disabled = false; // Enable the button
+        } else {
+            acceptButton.disabled = true; // Disable the button
+        }
+    });
+</script>
+{{ endblock }}
+
+{{ block styles}}
+<link rel="stylesheet" type="text/css" href="{% static 'global/css/styles.css' %}"/>
+{{ endblock }}
+
+{{ block content }}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div id="consent-container">
+            <div class="heading">
+                <h1>Consent Form</h1>
+            </div>
+            
+            <div id="content">
+                <p>
+                    Welcome to this study in which you will do an activity with other anonymous participants online in real time. 
+                    The study is led by Talal Rahwan, an associate professor of Computer Science at New York University Abu Dhabi.
+                </p>
+                
+                <p>
+                    Should you choose to participate, you will do the following:
+                </p>
+                <ol>
+                    <li><b>Read and understand the rules </b>of the activity.</li>
+                    <li><b>Answer comprehension check questions</b> to test your understanding of the rules. If you fail twice to 
+                        correctly answer all questions, you will not be allowed to participate, but we will compensate you with 
+                        ${{ failed_compensation }} for your time.
+                    <li><b>Wait for the other participant</b> to join the activity.</li>
+                    <li><b>Participate</b> in the activity.</li>
+                    <li>Answer <b>follow up questions.</b></li>
+                </ol>
+                
+                <p>
+                    <b>You can only participate in this study if you are doing it from a computer</b>; the study is not designed for 
+                    mobile devices, such as phones or tablets. <b>You need to do this study in a single sitting</b> as it involves real time interactions.
+                </p>
+
+                <p>
+                    You will receive a showup fee of ${{ showup_fee }} for completing the study, with the opportunity to earn more, depending on the choices 
+                    that you and the other participant make during the activity. The other participants may be bots or people (other MTurk workers)
+                    , and you will be informed of their nature before you participate in the activity. The maximum bonus you may earn in the activity 
+                    is ${{ max_bonus }}, in addition to your showup fee.
+                </p>
+
+                <p><b>The estimated time for the activity is approximately {{ estimated_time }} minutes.</b></p>
+
+                <p>
+                    You will be placed in a waiting room, and the activity will start once the other participants have joined. 
+                    If this doesn’t happen within {{ max_waiting_time }} minutes, you’ll receive the show-up fee. <br><br>
+
+                    Participation in this study is voluntary and you may leave the study at any point. However, we can only pay you 
+                    if you complete the study. We will keep track of your MTurk ID for payment and tracking. Information not containing 
+                    identifiers may be used in future research or shared with other researchers without your additional consent.<br><br>
+
+                    We do not anticipate any risks to you directly resulting from your participation in this study. There will also be
+                    no benefits to you beyond the money you earn completing the study. However, you will be assisting in the 
+                    collection of valuable data about human behavior. <br><br>
+
+                    If you have questions about the study, you may contact Talal Rahwan at <i>talal.rahwan@nyu.edu</i>. For questions 
+                    about your rights as a research participant, you may contact the IRB and refer to {{ irb_number }}, New York 
+                    University Abu Dhabi, +971 2 628 4313 or IRBnyuad@nyu.edu. If you would like to have a copy of this document, 
+                    please make a screenshot and keep it. 
+
+                </p>
+
+                <br>
+
+                <p style="color: red; font-size: 20px;">
+                    <i>Important: by clicking the button below, you agree to participate in the study. ONLY click this button if you 
+                        intend to participate!
+                    </i>
+                </p>
+
+                <p style="color: red; font-size: 15px;">
+                    <i>You can only participate in the study once. Open ONLY ONE browser window and do not attempt to duplicate your 
+                        input in any way, otherwise you will not get paid.
+                    </i>
+                </p>
+
+                <p style="color: red; font-size: 15px;">
+                    <i>Once you click the button do not close this window, otherwise payment cannot be guaranteed.</i>
+                </p>
+            </div>
+            
+            <div id="test" class="flex-end">
+                <button id="accept-button" disabled>Accept and Continue</button>
+            </div>
+            
+        </div>
+        <div id="footer">
+            <p>&copy; 2024 Krises Maskey</p>
+        </div>
+    </body>
+</html>
+{{ endblock }}

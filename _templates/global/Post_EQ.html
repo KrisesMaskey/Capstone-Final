@@ -1,0 +1,292 @@
+{% load otree static %}
+
+{{ block title }} 
+{{ endblock }}
+
+{{ block script }}
+    <script src="{% static 'global/js/peq.js' %}"></script>
+{{ endblock }}
+
+{{ block styles}}
+    <link rel="stylesheet" href="{% static 'global/css/styles.css' %}"/>
+{{ endblock }}
+
+{{ block content }}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div id="consent-container" style="margin-top: 1rem;">
+          <div class="heading">
+            <h1>Post-Experiment Questions</h1>
+          </div>
+          
+          <div class="instruction-content">
+            <p>
+              Please answer the following questions about the activity.
+            </p>  
+
+            <div class="demarkLine"></div>
+          </div>
+
+
+            <div class="quiz-container">
+              {% if activity_one == False %}
+              <div class="question">
+                  In the activity you participated in, what was the <b>identity</b> of the other proposer?
+              </div>
+              <div class="options">
+                <div class="option">
+                  <input type="radio" name="peq_1" value="Bot" id="time60">
+                  <label for="Bot">A <b>bot</b></label>
+                </div>
+                <div class="option">
+                  <input type="radio" name="peq_1" value="Human" id="time100">
+                  <label for="Human">A <b>person</b></label>
+                </div>
+              </div>
+              
+              <!-- Activity Experience -->
+              <div class="question">
+                  On a scale from +2 (very positive) to -2 (very negative), <b>how do you feel</b> towards the other proposer?
+              </div>
+              <div class="options">
+                <div class="option">
+                  <input type="radio" name="peq_2" value="Very Positive" id="opponentBot">
+                  <label for="very-positive">Very positive (+2)</label>
+                </div>
+                <div class="option">
+                  <input type="radio" name="peq_2" value="Positive" id="opponentPerson">
+                  <label for="positive">Positive (+1)</label>
+                </div>
+                <div class="option">
+                  <input type="radio" name="peq_2" value="Nuetral" id="opponentBotOrPerson">
+                  <label for="neutral">Neutral (0)</label>
+                </div>
+                <div class="option">
+                  <input type="radio" name="peq_2" value="Negative" id="opponentNoOpponent">
+                  <label for="negative">Negative (-1)</label>
+                </div>
+                <div class="option">
+                  <input type="radio" name="peq_2" value="Very Negative" id="t5">
+                  <label for="very-negative">Very Negative (-2)</label>
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- Age -->
+              <div class="question">
+                How old are you, in years?
+              </div>
+              <div class="options">
+                <input type="text" name="peq_age" id="peq_age">
+              </div>
+
+              <!-- Gender -->
+              <div class="question">
+                What is your gender?
+              </div>
+              <div class="options">
+                <div class="option">
+                    <input type="radio" name="peq_gender" value="male" id="male">
+                    <label for="male">Male</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_gender" value="female" id="female">
+                    <label for="female">Female</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_gender" value="other" id="other">
+                    <label for="other">Other</label><br>
+                </div>
+              </div>
+
+              <!-- Racial or Ethnic Identity -->
+              <div class="question">
+                With which of the following groups do you identify? You may select more than one.
+              </div>
+              <div class="options">
+                <div class="option">
+                    <input type="radio" name="peq_3" value="white" id="white">
+                    <label for="white">White</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_3" value="black_african_american" id="black_african_american">
+                    <label for="black_african_american">Black/African American</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_3" value="hispanic_latinx" id="hispanic_latinx">
+                    <label for="hispanic_latinx">Hispanic/Latinx</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_3" value="asian_or_asian_american" id="asian_or_asian_american">
+                    <label for="asian_or_asian_american">Asian or Asian American</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_3" value="american_indian_alaska_native" id="american_indian_alaska_native">
+                    <label for="american_indian_alaska_native">American Indian or Alaska Native</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_3" value="middle_eastern_or_north_african" id="middle_eastern_or_north_african">
+                    <label for="middle_eastern_or_north_african">Middle Eastern or North African</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_3" value="other" id="other">
+                    <label for="other">Other</label><br>
+                </div>
+              </div>
+
+
+              <!-- Location -->
+              <div class="question">
+                Where do you currently live?
+              </div>
+              <div class="options">
+                <input type="text" name="peq_4" id="location">
+              </div>
+
+              <!-- Education Level -->
+              <div class="question">
+                What is the highest level of education you have completed?
+              </div>
+              <div class="options">
+                <div class="option">
+                    <input type="radio" name="peq_5" value="less_than_high_school" id="less_than_high_school">
+                    <label for="less_than_high_school">Less than high school</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_5" value="high_school_or_equivalent" id="high_school_or_equivalent">
+                    <label for="high_school_or_equivalent">High school or equivalent (e.g., GED)</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_5" value="some_college" id="some_college">
+                    <label for="some_college">Some college</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_5" value="2_year_degree" id="2_year_degree">
+                    <label for="2_year_degree">2-year degree (Associate’s)</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_5" value="4_year_degree" id="4_year_degree">
+                    <label for="4_year_degree">4-year degree (Bachelor’s)</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_5" value="graduate_or_professional_degree" id="graduate_or_professional_degree">
+                    <label for="graduate_or_professional_degree">Graduate or professional degree</label><br>
+                </div>
+              </div>
+
+              <!-- Total Family Income -->
+              <div class="question">
+                What was your total family income from all sources in 2022, before taxes?
+              </div>
+              <div class="options">
+                <div class="option">
+                    <input type="radio" name="peq_6" value="less_than_10000" id="less_than_10000">
+                    <label for="less_than_10000">Less than $10,000</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_6" value="10000_to_19999" id="10000_to_19999">
+                    <label for="10000_to_19999">$10,000 to $19,999</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_6" value="20000_to_29999" id="20000_to_29999">
+                    <label for="20000_to_29999">$20,000 to $29,999</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_6" value="30000_to_39999" id="30000_to_39999">
+                    <label for="30000_to_39999">$30,000 to $39,999</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_6" value="40000_to_49999" id="40000_to_49999">
+                    <label for="40000_to_49999">$40,000 to $49,999</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_6" value="50000_to_59999" id="50000_to_59999">
+                    <label for="50000_to_59999">$50,000 to $59,999</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_6" value="60000_to_69999" id="60000_to_69999">
+                    <label for="60000_to_69999">$60,000 to $69,999</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_6" value="70000_to_79999" id="70000_to_79999">
+                    <label for="70000_to_79999">$70,000 to $79,999</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_6" value="80000_to_89999" id="80000_to_89999">
+                    <label for="80000_to_89999">$80,000 to $89,999</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_6" value="90000_to_99999" id="90000_to_99999">
+                    <label for="90000_to_99999">$90,000 to $99,999</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_6" value="100000_to_149999" id="100000_to_149999">
+                    <label for="100000_to_149999">$100,000 to $149,999</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_6" value="150000_or_more" id="150000_or_more">
+                    <label for="150000_or_more">$150,000 or more</label><br>
+                </div>
+              </div>
+
+
+              <!-- Strange or Surprising -->
+              <div class="question">
+                Was there anything strange or surprising about the activity?
+              </div>
+              <div class="options">
+                <input type="text" name="peq_7" id="strange_or_surprising">
+              </div>
+
+              <!-- Overall Experience -->
+              <div class="question">
+                How would you rate your overall experience completing the activity?
+              </div>
+              <div class="options">
+                <div class="option">
+                    <input type="radio" name="peq_8" value="extremely_positive" id="extremely_positive">
+                    <label for="extremely_positive">Extremely positive</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_8" value="positive" id="positive">
+                    <label for="positive">Positive</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_8" value="slightly_positive" id="slightly_positive">
+                    <label for="slightly_positive">Slightly positive</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_8" value="neutral" id="neutral">
+                    <label for="neutral">Neutral</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_8" value="slightly_negative" id="slightly_negative">
+                    <label for="slightly_negative">Slightly negative</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_8" value="negative" id="negative">
+                    <label for="negative">Negative</label><br>
+                </div>
+                <div class="option">
+                    <input type="radio" name="peq_8" value="extremely_negative" id="extremely_negative">
+                    <label for="extremely_negative">Extremely negative</label><br>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="flex-end">
+                <button id="quiz-button" onclick=peqHandler(event)>Submit</button>
+            </div>      
+            <button id="invisibleButton">Next</button>         
+        </div>
+      <div id="footer">
+        <p>&copy; 2024 Krises Maskey</p>
+      </div>
+    </body>
+</html>
+{{ endblock }}

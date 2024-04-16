@@ -1,0 +1,45 @@
+{% load otree static %}
+
+{{ block title }} 
+{{ endblock }}
+
+{{ block script }}
+<script src="{% static 'global/js/helper.js' %}"></script>
+{{ endblock }}
+
+{{ block styles}}
+<link rel="stylesheet" href="{% static 'global/css/styles.css' %}"/>
+{{ endblock }}
+
+{{ block content }}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        
+       <!-- Failed the Quiz twice -->
+        <div id="quiz-failed-twice">
+            <div id="consent-container">
+                <div class="instruction-content">
+                    <p>
+                        Unfortunately, you failed to answer all questions correctly, and thus you won’t be able to participate in the activity.
+                    </p>
+
+                    <p>
+                        As a compensation for your time, you will receive: ${{failed_quiz_compensation}}. Your validation code is: <i style="color: red;"> {{ validation_code }} </i>
+                    </p>
+
+                    <p>
+                        Thank you for your interest in our study.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div id="footer">
+            <p>&copy; 2024 Krises Maskey</p>
+        </div>
+    </body>
+</html>
+{{ endblock }}

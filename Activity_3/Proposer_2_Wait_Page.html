@@ -1,0 +1,32 @@
+{% load otree static %}
+
+{{ block title }} 
+{{ endblock }}
+
+{{ block script }}
+{{ endblock }}
+
+{{ block styles}}
+    <link rel="stylesheet" href="{% static 'global/css/styles.css' %}"/>
+{{ endblock }}
+
+{{ block content }}
+<html>
+    <body>
+        <div class="consent-container">
+            <div class="activity-div" style="display: flex; align-items: center;">
+                <span style="font-size: 20px">Please wait for Proposer_1 to choose their action</span>
+            </div>
+            <div class="animation-div" style="display: flex; align-items: center; justify-content: center; margin-top: 2.5rem;">
+                <div class="loader"></div>
+            </div>
+        </div>
+        
+        
+        <div id="footer">
+            <p>&copy; 2024 Krises Maskey</p>
+        </div>
+    </body>
+</html>
+
+{{ endblock }}

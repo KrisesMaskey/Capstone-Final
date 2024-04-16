@@ -1,0 +1,100 @@
+{% load otree static %}
+
+{{ block title }} 
+{{ endblock }}
+
+{{ block script }}
+{{ endblock }}
+
+{{ block styles}}
+    <link rel="stylesheet" href="{% static 'global/css/styles.css' %}"/>
+{{ endblock }}
+
+{{ block content }}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="consent-container">
+            <div class="heading">
+                <h1>Summary of Earnings</h1>
+            </div>
+
+            <div class="instruction-content">
+                {% if timeout_flag == True %}
+                    <p>Unfortunately, you <b>failed to choose an action</b> within the <b>time limit</b>, and thus you won’t be able 
+                        to participate in the activity.</p>
+                    <p>As a compensation for your time, you will receive the show-up fee: ${{showup_fee}}.</p>
+                {% endif %}
+
+                <p>Thank you for your participation!</p>
+                
+                <div class="earningDiv">
+                    {% if activity_one == True %}
+                    <table>
+                        <tr>
+                            <th>Your Action</th>
+                            <th>Your Earnings</th>
+                        </tr>
+                        <tr>
+                            <td>{{ player_action }}</td>
+                            <td>${{ earning }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Total Payoff</b></td>
+                            <td><b>${{ t }} </b></td>
+                        </tr>
+                    </table>
+                    {% endif %}
+
+                    {% if activity_one == False %}
+                    <table>
+                        <tr>
+                            <th>Your Action</th>
+                            <th>Other Proposers' Action</th>
+                            <th>Your Earnings</th>
+                        </tr>
+                        <tr>
+                            <td>{{ player_action }}</td>
+                            <td>{{ other_proposer_action}} </td>
+                            <td>${{ earning }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Total Payoff</b></td>
+                            <td colspan="2"><b>${{ t }} </b></td>
+                        </tr>
+                    </table>
+                    {% endif %}
+                </div>
+
+                {% if timeout_flag == False %}
+                    <p>
+                        <b>Total earnings = </b>${{ t }} + bonus (${{bonus}}) + showup-fee (${{showup_fee}})
+                    </p>
+                    
+                    <p>
+                        <b>You will receive the bonus</b> once you finish answering a few follow-up questions.
+                    </p>
+                    
+                    <i>
+                        Click “Continue” to answer a few questions about yourself and the activity!
+                    </i>
+                {% else %}
+                    <p>
+                        <b>Total earnings = </b> {{ t }} + showup-fee (${{showup_fee}})
+                    </p>
+                {% endif %}
+            </div>
+
+            <div class="flex-end">
+                <button class="buttonClass">Continue</button>
+            </div>
+        </div>
+        <div id="footer">
+            <p>&copy; 2024 Krises Maskey</p>
+        </div>
+    </body>
+</html>
+{{ endblock }}

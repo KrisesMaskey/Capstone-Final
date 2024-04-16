@@ -1,0 +1,131 @@
+{% load otree static %}
+
+{{ block title }} 
+{{ endblock }}
+
+{{ block script }}
+<script>
+    // Timer Logic
+    let start = sessionStorage.getItem('start') ? Number(sessionStorage.getItem('start')) : Date.now();
+    sessionStorage.setItem('start', start.toString());
+
+    let activityTimer = document.getElementById('countdown');
+    
+    function updateWaitTime() {
+        let now = Date.now();
+        let diff = Math.floor((now - start) / 1000);  // difference in seconds
+        timeleft = js_vars.timeout - diff
+        let minutes = Math.floor(timeleft / 60);
+        let seconds = timeleft % 60;
+        activityTimer.textContent = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+
+        if(timeleft <= 0){
+            sessionStorage.removeItem('start');
+            clearInterval(countdownTimer);
+        }
+    }
+
+    function handleNext(event) {
+        event.preventDefault();
+        // Get the value of the form field
+        let playerChoice = document.querySelector("#id_player_choice").value.trim();
+
+        // Check if the value is null or empty
+        if (playerChoice !== ''){
+            sessionStorage.removeItem('start');
+        }
+        
+        form.submit();
+    }
+        
+    // Content Loaded
+    document.addEventListener("DOMContentLoaded", (event) => {
+        let countdownTimer = setInterval(updateWaitTime, 1000);
+    });
+    
+</script>
+{{ endblock }}
+
+{{ block styles }}
+<link rel="stylesheet" href="{% static 'global/css/styles.css' %}"/>
+{{ endblock }}
+
+{{ block content }}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="consent-container">
+            <!-- Standard Dictator Game -->
+            <div class="heading">
+                 <h1>Activity</h1>
+            </div> 
+
+            <div class="activity-div">
+                <p>
+                    You happened to be chosen as the <span style="color: red;">proposer</span>, and another 
+                    <b>MTurker</b> happened to be chosen as the <span style="color: blue;">Receiver</span>.  
+                </p>
+
+                <p>
+                    Please choose between actions: <b>‘A’</b> and <b>‘B’</b>. Remember:
+                    <ul>
+                        <li>
+                            If you choose <b>‘A’</b>: 
+                            <ul>
+                                <li>
+                                You get <span style="color: red;">${{ A_x }}</span>
+                                </li>
+                            <li>
+                                The <span style="color: blue;">Receiver</span> gets <span style="color: blue;">${{ A_y }}</span>
+                            </li>
+                            </ul>
+                            
+                        </li>
+
+                        <li>
+                            If you choose <b>‘B’</b>: 
+                            <ul>
+                                <li>
+                                    You get <span style="color: red;">${{ B_x }}</span>   
+                                </li>
+                                <li>
+                                    The <span style="color: blue;">Receiver</span> gets <span style="color: blue;">${{ B_y }}</span>
+                                </li>                                             
+                            </ul>
+                           
+                        </li>
+                    </ul>
+                </p>
+
+                <div class="form-fields">
+                    <div class="form-elements" style="display:flex; align-items: center; justify-items: center;">
+                        <div>Please choose action <strong>A</strong> or <strong>B</strong>:</div> 
+                        <div class="drop-down" style="margin-left: 1rem;">
+                            {% formfield player.player_choice label=form_label %}
+                        </div>      
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="timer-div">
+                <span>Time remainning</span>
+                <span><b style="color: red;">(Please decide before the timer finishes!)</b></span>
+                <div id="countdown" style="margin-top: 0.5rem; font-weight: bolder; font-size: 25px;">01:00</div>
+            </div>
+
+            <div class="flex-end">
+                <button class="buttonClass" onclick="handleNext(event)">Next</button>
+            </div>
+        </div>
+
+
+        <div id="footer">
+            <p>&copy; 2024 Krises Maskey</p>
+        </div>
+    </body>
+</html>
+{{ endblock }}
