@@ -2,7 +2,7 @@ from otree.api import *
 import random, time
 
 doc = """
-Passive Simultaneous Dictator Game (Two Proposer)
+Non-Passive Simultaneous Dictator Game (Two Proposer)
 """
 
 # ---------------------------------------HELPER FUNCTIONS---------------------------------------
@@ -16,7 +16,7 @@ def generate_unique_sequence(prefix='SC'):
     return sequence
 
 def checkQuiz(vals):
-    answer_key = ["3", "1", ["2", "3", "4"], ["1"], "1", "2"]
+    answer_key = ["3", "1", ["2", "3", "4"], ["1"], "2", "2"]
 
     if(vals == answer_key):
         return True
@@ -51,7 +51,7 @@ def set_payoffs(player):
 
 # MODELS
 class C(BaseConstants):
-    NAME_IN_URL = 'Activity_2'
+    NAME_IN_URL = 'Activity_4'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
 
@@ -113,7 +113,6 @@ class Page2(Page):
 
 class Instructions(Page):
     template_name = '_templates/global/DG-Simultaneous-Instructions.html'
-
     @staticmethod
     def js_vars(player):
         enable_button_time = 3 if player.session.config['DEVELOPMENT_TESTING'] else 30
@@ -128,7 +127,7 @@ class Instructions(Page):
                 SI_Y1 = player.session.config['simultaneous_dg_game_payoff']['Action_AA']['Receiver'],
                 SI_X2 = player.session.config['simultaneous_dg_game_payoff']['Action_AB']['Player_1'],
                 SI_Y2 = player.session.config['simultaneous_dg_game_payoff']['Action_AB']['Receiver'],
-                isPassive = True,
+                isPassive = False,
             ))
     
     @staticmethod
@@ -211,7 +210,7 @@ class GamePage(Page):
                     BA_x = player.session.config['simultaneous_dg_game_payoff']['Action_BA']['Player_1'], BA_y = player.session.config['simultaneous_dg_game_payoff']['Action_BA']['Player_2'], BA_z = player.session.config['simultaneous_dg_game_payoff']['Action_BA']['Receiver'],
                     BB_x = player.session.config['simultaneous_dg_game_payoff']['Action_BB']['Player_1'], BB_y = player.session.config['simultaneous_dg_game_payoff']['Action_BB']['Player_2'], BB_z = player.session.config['simultaneous_dg_game_payoff']['Action_BB']['Receiver'],
                     form_label= " ",
-                    isPassive = True,
+                    isPassive = False,
                     op_nature = player.opponent_nature,
                     role = player.player_role,
                     op_role = "Proposer_2" if player.player_role == "Proposer_1" else "Proposer_1"

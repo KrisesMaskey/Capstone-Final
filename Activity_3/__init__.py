@@ -2,7 +2,7 @@ from otree.api import *
 import random, time
 
 doc = """
-Sequential Dictator Game (Two Proposer)
+Passive Sequential Dictator Game (Two Proposer)
 """
 
 # ---------------------------------------HELPER FUNCTIONS---------------------------------------
@@ -15,8 +15,8 @@ def generate_unique_sequence(prefix='SC'):
     sequence = f'{prefix}{current_time_ms}{random_number}'
     return sequence
 
-def checkQuiz(vals, passive_flag):
-    answer_key = ["3", "2", ["2", "3", "4"], ["1"], "1", "1"] if passive_flag == True else ["3", "2", ["2", "3", "4"], ["1"], "2", "1"]
+def checkQuiz(vals):
+    answer_key = ["3", "2", ["2", "3", "4"], ["1"], "1", "1"]
 
     if(vals == answer_key):
         return True
@@ -67,7 +67,6 @@ class Group(BaseGroup):
 class Player(BasePlayer):
     accept_consent_flag = models.BooleanField(initial = False)
     MTURK_ID = models.StringField(initial= '')
-    passive_version_flag = models.BooleanField(initial = None)
     failed_quiz_count = models.IntegerField(initial= 0)
     player_role = models.StringField(initial='')
     player_choice = models.StringField(choices=['X','Y',], label="Your Choice")
@@ -87,9 +86,6 @@ class Player(BasePlayer):
     peq_6 = models.StringField(initial = None)
     peq_7 = models.StringField(initial = None)
     peq_8 = models.StringField(initial = None)
-    peq_9 = models.StringField(initial = None)
-    peq_10 = models.StringField(initial = None)
-
 
 # PAGES
 class Page1(Page):
@@ -114,12 +110,10 @@ class Page2(Page):
         if(data["type"] == 'MTurk-ID'):
             player.MTURK_ID = data["id"]
 
-    @staticmethod
-    def before_next_page(player, timeout_happened):
-        player.passive_version_flag = random.choice([True, False])
-
 
 class Instructions(Page):
+    template_name = '_templates/global/DG-Sequential-Instructions.html'
+
     @staticmethod
     def js_vars(player):
         enable_button_time = 3 if player.session.config['DEVELOPMENT_TESTING'] else 30
@@ -134,20 +128,20 @@ class Instructions(Page):
                 SI_Y1 = player.session.config['sequential_dg_game_payoff']['Action_AA']['Receiver'],
                 SI_X2 = player.session.config['sequential_dg_game_payoff']['Action_AB']['Player_1'],
                 SI_Y2 = player.session.config['sequential_dg_game_payoff']['Action_AB']['Receiver'],
-                isPassive = player.passive_version_flag,
+                isPassive = True,
             ))
     
     @staticmethod
     def live_method(player, data):      
         if(data["val"] == 2):
-            player.failed_quiz_count = player.failed_quiz_count if checkQuiz(data["answers"], player.passive_version_flag) else (player.failed_quiz_count + 1)
+            player.failed_quiz_count = player.failed_quiz_count if checkQuiz(data["answers"]) else (player.failed_quiz_count + 1)
             
             if(player.failed_quiz_count > 1):
                 player.participant.failed_quiz = True
             else:
                 player.participant.failed_quiz = False
             
-            return {player.id_in_group: {"flag" : checkQuiz(data["answers"],  player.passive_version_flag), "cnt": player.failed_quiz_count}}
+            return {player.id_in_group: {"flag" : checkQuiz(data["answers"]), "cnt": player.failed_quiz_count}}
     
     @staticmethod
     def before_next_page(player, timeout_happened):
@@ -178,7 +172,7 @@ class WaitRoom(Page):
    
     @staticmethod
     def js_vars(player):
-        rand_wait_time = 5 if(player.session.config['DEVELOPMENT_TESTING'] == True) else positive_normal(9.66, 66.02)
+        rand_wait_time = 5 if(player.session.config['DEVELOPMENT_TESTING'] == True) else positive_normal(9.66, 26.02)
             
         return (dict(wait_time = rand_wait_time, time_left = player.session.config['max_waiting_time_min']))
     
@@ -206,6 +200,7 @@ class Proposer_2_Wait_Page(Page):
         player.opponent_random_choice = opponent_action_choice
 
 class GamePage(Page):
+    template_name = '_templates/global/DG-Sequential-GamePage.html'
     timeout_seconds = 60
 
     form_model = 'player'
@@ -227,7 +222,7 @@ class GamePage(Page):
                     BA_x = player.session.config['sequential_dg_game_payoff']['Action_BA']['Player_1'], BA_y = player.session.config['sequential_dg_game_payoff']['Action_BA']['Player_2'], BA_z = player.session.config['sequential_dg_game_payoff']['Action_BA']['Receiver'],
                     BB_x = player.session.config['sequential_dg_game_payoff']['Action_BB']['Player_1'], BB_y = player.session.config['sequential_dg_game_payoff']['Action_BB']['Player_2'], BB_z = player.session.config['sequential_dg_game_payoff']['Action_BB']['Receiver'],
                     form_label= " ",
-                    isPassive = player.passive_version_flag,
+                    isPassive = True,
                     op_nature = player.opponent_nature,
                     op_choice = player.opponent_random_choice,
                     role = player.player_role,
@@ -317,8 +312,6 @@ class PEQ(Page):
             player.peq_6 = data["answers"][5]
             player.peq_7 = data["answers"][6]
             player.peq_8 = data["answers"][7]
-            player.peq_9 = data["answers"][8]
-            player.peq_10 = data["answers"][9]
         
         return {player.id_in_group: {"flag" : True}}  
 

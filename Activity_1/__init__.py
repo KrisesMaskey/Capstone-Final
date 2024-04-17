@@ -65,8 +65,6 @@ class Player(BasePlayer):
     peq_6 = models.StringField(initial = None)
     peq_7 = models.StringField(initial = None)
     peq_8 = models.StringField(initial = None)
-    peq_9 = models.StringField(initial = None)
-    peq_10 = models.StringField(initial = None)
 
 
 # PAGES
@@ -151,7 +149,7 @@ class WaitRoom(Page):
    
     @staticmethod
     def js_vars(player):
-        rand_wait_time = 5 if(player.session.config['DEVELOPMENT_TESTING'] == True) else positive_normal(9.66, 66.02)
+        rand_wait_time = 5 if(player.session.config['DEVELOPMENT_TESTING'] == True) else positive_normal(9.66, 26.02)
             
         return (dict(wait_time = rand_wait_time, time_left = player.session.config['max_waiting_time_min']))
     
@@ -266,8 +264,6 @@ class PEQ(Page):
             player.peq_6 = data["answers"][5]
             player.peq_7 = data["answers"][6]
             player.peq_8 = data["answers"][7]
-            player.peq_9 = data["answers"][8]
-            player.peq_10 = data["answers"][9]
         
         return {player.id_in_group: {"flag" : True}}  
 

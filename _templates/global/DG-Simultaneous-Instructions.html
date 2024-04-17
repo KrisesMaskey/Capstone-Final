@@ -14,6 +14,8 @@ function quizHandler(e){
     const q4 = [...document.querySelectorAll('input[name="unequalPayoff"]:checked')].map(item => item.value);
     const q5 = document.querySelector('input[name="receiverDescription"]:checked');
     const q6 = document.querySelector('input[name="proposer2Info"]:checked');
+    
+    console.log(q3, q4);
 
     if (q1 && q2 && q3 && q4 && q5 && q6) {
         liveSend({"val": 2,"answers": [q1.value, q2.value, q3, q4, q5.value, q6.value]});
@@ -105,12 +107,12 @@ function quizHandler(e){
                                             </li>
                                         </ul>
                                     <li style="color: green;">IMPORTANT: <span style="color: red;">Proposers</span> make their 
-                                        decisions <b style="color: green;">sequentially.</b> In other words, <span style="color: red;">Proposer_1</span> 
-                                        chooses their action first. Afterwards, <span style="color: red;">Proposer_2</span> is informed about <span style="color: red;">Proposer_1</span>'s
-                                        choice, and then gets to choose their own action. 
+                                        decisions <b style="color: green;">simultaneously.</b> In other words, each <span style="color: red;">proposer</span> 
+                                        chooses their action independently, and <b style="color: green;">does not get to know what the other 
+                                        <span style="color: red;">proposer</span> has chosen</b> until the end of the activity.
                                     </li>
                                     <li>The <span style="color: blue;">Receiver</span>, <b>knows</b> that the <span style="color: red;">proposers</span> 
-                                        choose their actions sequentially, and <b>knows</b> which action was chosen by <span style="color: red;">Proposer_1</span> 
+                                        choose their actions simultaneously, and <b>knows</b> which action was chosen by <span style="color: red;">Proposer_1</span> 
                                         and which action was chosen by <span style="color: red;">Proposer_2</span>.
                                     </li>
                                     {% if isPassive == True %}
@@ -141,8 +143,14 @@ function quizHandler(e){
                                     <li>The <span style="color: blue;">Receiver</span> will be an MTurk worker.</li>
                                     <li>A <span style="color: red;">proposer</span> can either be a <b>bot</b> or a <b>person</b>.</li>
                                     <ul>
-                                        <li>A <b>bot</b> is a computer program that makes decisions.</li>
-                                        <li>A <b>person</b> is another MTurk worker.</li>
+                                        <li>A <b>bot</b> is a computer program that makes decisions, represented like this:</li>
+                                        <div class="imageClass">
+                                            <img src="{% static 'global/assets/bot-bw.png' %}" height="100px">
+                                        </div>
+                                        <li>A <b>person</b> is another MTurk worker, represented like this:</li>
+                                        <div class="imageClass">
+                                            <img src="{% static 'global/assets/human-bw.png' %}" height="100px">
+                                        </div>
                                     </ul>
                                     <li>
                                         At the end of the activity, you will receive:
@@ -233,7 +241,7 @@ function quizHandler(e){
                     </div>
                     
                     <div class="question">
-                        What combination of actions will result in <b>equal</b> payoff division among all three participants (Select all that apply)?
+                        What combination of actions will result in <b>equal</b> payoff division among all three participants <b>(Select all that apply)</b>?
                     </div>
                     <div class="options">
                         <div class="option">
@@ -255,7 +263,7 @@ function quizHandler(e){
                     </div>
                     
                     <div class="question">
-                        What combination of actions will result in <b>unequal</b> payoff division among all three participants (Select all that apply)?
+                        What combination of actions will result in <b>unequal</b> payoff division among all three participants <b>(Select all that apply)</b>?
                     </div>
                     <div class="options">
                         <div class="option">
@@ -281,14 +289,19 @@ function quizHandler(e){
                     </div>
                     <div class="options">
                         <div class="option">
-                            <input type="radio" name="receiverDescription" value="1" id="receiverAccept">
-                            <label for="receiverAccept">The <span style="color: blue;">receiver</span> has <b>no choice but to accept</b> the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> and <span style="color: red;">Proposer_2</span></label>
+                            <div style="display: flex; align-items: baseline;">
+                                <input type="radio" name="receiverDescription" value="1" id="receiverAccept">
+                                <label for="receiverAccept" style="margin-left: 4px;">The <span style="color: blue;">receiver</span> has <b>no choice but to accept</b> the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> and <span style="color: red;">Proposer_2</span></label>
+                            </div>
                         </div>
                         <div class="option">
-                            <input type="radio" name="receiverDescription" value="2" id="receiverReject">
-                            <label for="receiverReject">The <span style="color: blue;">receiver</span> <b>can reject</b> the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> and <span style="color: red;">Proposer_2</span>. If the <span style="color: blue;">receiver</span> rejects, the <span style="color: blue;">receiver</span> gets no payoff, but this has no effect on the <span style="color: red;">proposers</span>’ payoff</label>
+                            <div style="display: flex; align-items: baseline;">
+                                <input type="radio" name="receiverDescription" value="2" id="receiverReject">
+                                <label for="receiverReject" style="margin-left: 4px;">The <span style="color: blue;">receiver</span> <b>can reject</b> the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> and <span style="color: red;">Proposer_2</span>. If the <span style="color: blue;">receiver</span> rejects, the <span style="color: blue;">receiver</span> gets no payoff, but this has no effect on the <span style="color: red;">proposers</span>’ payoff</label>
+                            </div>
                         </div>
                     </div>
+                    
                     
                     <div class="question">
                         What <b>information</b> does <span style="color: red;">Proposer_2</span> have before choosing their action?

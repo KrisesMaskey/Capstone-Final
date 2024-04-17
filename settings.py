@@ -2,18 +2,28 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        name='Activity_1',
+        name='Activity_1_Baseline',
         app_sequence=['Activity_1'],
         num_demo_participants=10,
     ),
     dict(
-        name='Activity_2',
+        name='Activity_2_Passive_Simultaneous',
         app_sequence=['Activity_2'],
         num_demo_participants=10,
     ),
-     dict(
-        name='Activity_3',
+    dict(
+        name='Activity_3_Passive_Sequential',
         app_sequence=['Activity_3'],
+        num_demo_participants=10,
+    ),
+    dict(
+        name='Activity_4_Non_Passive_Simultaneous',
+        app_sequence=['Activity_4'],
+        num_demo_participants=10,
+    ),
+    dict(
+        name='Activity_5_Non_Passive_Sequential',
+        app_sequence=['Activity_5'],
         num_demo_participants=10,
     )
 ]

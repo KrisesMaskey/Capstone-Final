@@ -2,7 +2,7 @@ from otree.api import *
 import random, time
 
 doc = """
-Passive Simultaneous Dictator Game (Two Proposer)
+Non Passive Sequential Dictator Game (Two Proposer)
 """
 
 # ---------------------------------------HELPER FUNCTIONS---------------------------------------
@@ -16,7 +16,7 @@ def generate_unique_sequence(prefix='SC'):
     return sequence
 
 def checkQuiz(vals):
-    answer_key = ["3", "1", ["2", "3", "4"], ["1"], "1", "2"]
+    answer_key = ["3", "2", ["2", "3", "4"], ["1"], "2", "1"]
 
     if(vals == answer_key):
         return True
@@ -34,24 +34,24 @@ def set_payoffs(player):
     
     #If Dictator_1 and Dictator_2 chooses action A
     if(player.player_choice == 'X' and player.opponent_random_choice == 'X'):
-        player.payoff = player.session.config['simultaneous_dg_game_payoff']['Action_AA']['Player_1']
+        player.payoff = player.session.config['sequential_dg_game_payoff']['Action_AA']['Player_1']
 
     #If Dictator_1 chooses action A and Dictator_2 chooses action B
     elif(player.player_choice == 'X' and player.opponent_random_choice == 'Y'):
-        player.payoff = player.session.config['simultaneous_dg_game_payoff']['Action_AB']['Player_1']
+        player.payoff = player.session.config['sequential_dg_game_payoff']['Action_AB']['Player_1']
 
     #If Dictator_1 chooses action B and Dictator_2 chooses action A
     elif(player.player_choice == 'Y' and player.opponent_random_choice == 'X'):
-        player.payoff = player.session.config['simultaneous_dg_game_payoff']['Action_BA']['Player_1']
+        player.payoff = player.session.config['sequential_dg_game_payoff']['Action_BA']['Player_1']
     
     #If Dictator_1 and Dictator_2 chooses action B
     elif(player.player_choice == 'Y' and player.opponent_random_choice == 'Y'):
-        player.payoff = player.session.config['simultaneous_dg_game_payoff']['Action_BB']['Player_1']
+        player.payoff = player.session.config['sequential_dg_game_payoff']['Action_BB']['Player_1']
 # ----------------------------------------------------------------------------------------------
 
 # MODELS
 class C(BaseConstants):
-    NAME_IN_URL = 'Activity_2'
+    NAME_IN_URL = 'Activity_5'
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
 
@@ -112,7 +112,7 @@ class Page2(Page):
 
 
 class Instructions(Page):
-    template_name = '_templates/global/DG-Simultaneous-Instructions.html'
+    template_name = '_templates/global/DG-Sequential-Instructions.html'
 
     @staticmethod
     def js_vars(player):
@@ -124,11 +124,11 @@ class Instructions(Page):
         return (dict(
                 showup_fee = player.session.config['showup_fee'],
                 max_decide_time=player.session.config['max_decide_time_sec'],
-                SI_X1 = player.session.config['simultaneous_dg_game_payoff']['Action_AA']['Player_1'],
-                SI_Y1 = player.session.config['simultaneous_dg_game_payoff']['Action_AA']['Receiver'],
-                SI_X2 = player.session.config['simultaneous_dg_game_payoff']['Action_AB']['Player_1'],
-                SI_Y2 = player.session.config['simultaneous_dg_game_payoff']['Action_AB']['Receiver'],
-                isPassive = True,
+                SI_X1 = player.session.config['sequential_dg_game_payoff']['Action_AA']['Player_1'],
+                SI_Y1 = player.session.config['sequential_dg_game_payoff']['Action_AA']['Receiver'],
+                SI_X2 = player.session.config['sequential_dg_game_payoff']['Action_AB']['Player_1'],
+                SI_Y2 = player.session.config['sequential_dg_game_payoff']['Action_AB']['Receiver'],
+                isPassive = False,
             ))
     
     @staticmethod
@@ -187,9 +187,21 @@ class WaitRoom(Page):
     def before_next_page(player, timeout_happened):
         player.opponent_nature = player.session.config['control_opponent_nature'][1] if (player.session.config['CONTROL_FLAG'] == True) else random.choice(['MTurker', 'Bot'])  
 
+class Proposer_2_Wait_Page(Page):
+    template_name = '_templates/global/Proposer_2_Wait_Page.html'
+    timeout_seconds = positive_normal(23, 11)
+
+    @staticmethod
+    def is_displayed(player):
+        return (player.participant.failed_quiz == False and player.player_role == "Proposer_2")
+    
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        opponent_action_choice = player.session.config['control_action_choices'][0] if (player.session.config['CONTROL_FLAG'] == True) else random.choice(['X', 'Y'])
+        player.opponent_random_choice = opponent_action_choice
 
 class GamePage(Page):
-    template_name = '_templates/global/DG-Simultaneous-GamePage.html'
+    template_name='_templates/global/DG-Sequential-GamePage.html'
     timeout_seconds = 60
 
     form_model = 'player'
@@ -206,13 +218,14 @@ class GamePage(Page):
     
     @staticmethod
     def vars_for_template(player):
-        return dict(AA_x = player.session.config['simultaneous_dg_game_payoff']['Action_AA']['Player_1'], AA_y = player.session.config['simultaneous_dg_game_payoff']['Action_AA']['Player_2'], AA_z = player.session.config['simultaneous_dg_game_payoff']['Action_AA']['Receiver'],
-                    AB_x = player.session.config['simultaneous_dg_game_payoff']['Action_AB']['Player_1'], AB_y = player.session.config['simultaneous_dg_game_payoff']['Action_AB']['Player_2'], AB_z = player.session.config['simultaneous_dg_game_payoff']['Action_AB']['Receiver'],
-                    BA_x = player.session.config['simultaneous_dg_game_payoff']['Action_BA']['Player_1'], BA_y = player.session.config['simultaneous_dg_game_payoff']['Action_BA']['Player_2'], BA_z = player.session.config['simultaneous_dg_game_payoff']['Action_BA']['Receiver'],
-                    BB_x = player.session.config['simultaneous_dg_game_payoff']['Action_BB']['Player_1'], BB_y = player.session.config['simultaneous_dg_game_payoff']['Action_BB']['Player_2'], BB_z = player.session.config['simultaneous_dg_game_payoff']['Action_BB']['Receiver'],
+        return dict(AA_x = player.session.config['sequential_dg_game_payoff']['Action_AA']['Player_1'], AA_y = player.session.config['sequential_dg_game_payoff']['Action_AA']['Player_2'], AA_z = player.session.config['sequential_dg_game_payoff']['Action_AA']['Receiver'],
+                    AB_x = player.session.config['sequential_dg_game_payoff']['Action_AB']['Player_1'], AB_y = player.session.config['sequential_dg_game_payoff']['Action_AB']['Player_2'], AB_z = player.session.config['sequential_dg_game_payoff']['Action_AB']['Receiver'],
+                    BA_x = player.session.config['sequential_dg_game_payoff']['Action_BA']['Player_1'], BA_y = player.session.config['sequential_dg_game_payoff']['Action_BA']['Player_2'], BA_z = player.session.config['sequential_dg_game_payoff']['Action_BA']['Receiver'],
+                    BB_x = player.session.config['sequential_dg_game_payoff']['Action_BB']['Player_1'], BB_y = player.session.config['sequential_dg_game_payoff']['Action_BB']['Player_2'], BB_z = player.session.config['sequential_dg_game_payoff']['Action_BB']['Receiver'],
                     form_label= " ",
-                    isPassive = True,
+                    isPassive = False,
                     op_nature = player.opponent_nature,
+                    op_choice = player.opponent_random_choice,
                     role = player.player_role,
                     op_role = "Proposer_2" if player.player_role == "Proposer_1" else "Proposer_1"
                     )
@@ -230,8 +243,9 @@ class GamePage(Page):
             player.participant.activity_timeout = False
             player.timeout_flag = False
 
-            opponent_action_choice = player.session.config['control_action_choices'][0] if (player.session.config['CONTROL_FLAG'] == True) else random.choice(['X', 'Y'])
-            player.opponent_random_choice = opponent_action_choice
+            if(player.player_role == 'Proposer_1'):
+                opponent_action_choice = player.session.config['control_action_choices'][0] if (player.session.config['CONTROL_FLAG'] == True) else random.choice(['X', 'Y'])
+                player.opponent_random_choice = opponent_action_choice
 
             set_payoffs(player)
             
@@ -313,4 +327,4 @@ class Submission_Code(Page):
     def vars_for_template(player):
         return dict(submission_code = player.participant.submission_code)
 
-page_sequence = [Page1, Page2, Instructions, Page4, WaitRoom, GamePage, SOE, PEQ, Submission_Code]
+page_sequence = [Page1, Page2, Instructions, Page4, WaitRoom, Proposer_2_Wait_Page, GamePage, SOE, PEQ, Submission_Code]

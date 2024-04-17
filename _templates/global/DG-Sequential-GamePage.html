@@ -58,7 +58,7 @@
     </head>
     <body>
         <div class="consent-container">
-            <!-- Simultaneous Dictator Game -->
+            <!-- Sequential Dictator Game -->
             <div class="heading">
                  <h1>Activity</h1>
             </div> 
@@ -68,24 +68,64 @@
                     You happened to be chosen as <span style="color: red;">{{ role }}</span>, and you happened to be paired with another <b>{{ op_nature }}</b> who will be 
                     taking the role of <span style="color: red;">{{ op_role }}</span>. Another <b>MTurker</b> happened to be chosen as the <span style="color: blue;">Receiver</span>.  
                 </p>
-                <p style="color: green;">IMPORTANT: <span style="color: red;">Proposers</span> make their 
-                    decisions <b style="color: green;">simultaneously.</b> In other words, each <span style="color: red;">proposer</span> 
-                    chooses their action independently, and <b style="color: green;">does not get to know what the other 
-                    <span style="color: red;">proposer</span> has chosen</b> until the end of the activity.
-                </p>
 
-                {% if isPassive == True %}
-                <p>
-                    REMEMBER: The <span style="color: blue;">receiver</span> is <b>completely passive</b>, i.e., they have no choice but to accept 
-                    the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> and <span style="color: red;">Proposer_2</span>.
-                
-                </p>
-                {% elif isPassive == False %}
-                <p>
-                    REMEMBER: The <span style="color: blue;">receiver</span> can <b>reject</b> the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> 
-                    and <span style="color: red;">Proposer_2</span>. If the <span style="color: blue;">receiver</span> rejects, the <span style="color: blue;">receiver</span> 
-                    gets no payoff, but this has no effect on the <span style="color: red;">proposers'</span> payoff.               
-                </p>
+                <div class="image-container">
+                    <div class="imageClass">
+                        <img src="{% static 'global/assets/Human-blue.png' %}" height="100px">
+                        <span style="color: #145DA8; font-weight: bold;">Receiver</span>
+                    </div>
+                    <div class="imageClass">
+                        <img src="{% static 'global/assets/human.png' %}" height="100px">
+                        <span style="color: red; font-weight: bold;">You</span>
+                    </div>
+                    <div class="imageClass">
+                        {% if op_nature == 'MTurker' %}
+                        <img src="{% static 'global/assets/human.png' %}" height="100px">
+                        {% elif op_nature == 'Bot' %}
+                        <img src="{% static 'global/assets/bot.png' %}" height="100px">
+                        {% endif %}
+                        <span style="color: red; font-weight: bold;">{{op_role}}</span>
+                    </div>
+                </div>
+
+                {% if role == 'Proposer_1' %}
+                    <p style="color: green;">IMPORTANT: <span style="color: red;">Proposers</span> make their 
+                        decisions <b style="color: green;">sequentially.</b> In other words, <span style="color: red;">Proposer_1</span> 
+                        chooses their action first. Afterwards, <span style="color: red;">Proposer_2</span> is informed about <span style="color: red;">Proposer_1</span>'s
+                        choice, and then gets to choose their own action. 
+                    </p>
+
+                    {% if isPassive == True %}
+                    <p>
+                        REMEMBER: The <span style="color: blue;">receiver</span> is <b>completely passive</b>, i.e., they have no choice but to accept 
+                        the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> and <span style="color: red;">Proposer_2</span>.
+                    
+                    </p>
+                    {% elif isPassive == False %}
+                    <p>
+                        REMEMBER: The <span style="color: blue;">receiver</span> can <b>reject</b> the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> 
+                        and <span style="color: red;">Proposer_2</span>. If the <span style="color: blue;">receiver</span> rejects, the <span style="color: blue;">receiver</span> 
+                        gets no payoff, but this has no effect on the <span style="color: red;">proposers'</span> payoff.               
+                    </p>
+                    {% endif %}
+
+                {% elif role == 'Proposer_2' %}
+                    <p>IMPORTANT: <span style="color: red;">Proposer_1</span> has already chosen action <b>{{ op_choice }}</b>.</p>
+
+                    {% if isPassive == True %}
+                    <p>
+                        REMEMBER: The <span style="color: blue;">receiver</span> is <b>completely passive</b>, i.e., they have no choice but to accept 
+                        the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> and <span style="color: red;">Proposer_2</span>.
+                    
+                    </p>
+                    {% elif isPassive == False %}
+                    <p>
+                        REMEMBER: The <span style="color: blue;">receiver</span> can <b>reject</b> the payoff determined by the joint actions of <span style="color: red;">Proposer_1</span> 
+                        and <span style="color: red;">Proposer_2</span>. If the <span style="color: blue;">receiver</span> rejects, the <span style="color: blue;">receiver</span> 
+                        gets no payoff, but this has no effect on the <span style="color: red;">proposers'</span> payoff.               
+                    </p>
+                    {% endif %}
+
                 {% endif %}
                 
                 <p>

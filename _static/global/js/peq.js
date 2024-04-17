@@ -8,13 +8,11 @@ function peqHandler(e){
     const peq_6 = document.getElementById('location').value;
     const peq_7 = document.querySelector('input[name="peq_5"]:checked');
     const peq_8 = document.querySelector('input[name="peq_6"]:checked');
-    const peq_9 = document.getElementById('strange_or_surprising').value;
-    const peq_10 = document.querySelector('input[name="peq_8"]:checked');
 
-    if (!(peq_1 && peq_2 && peq_8 && peq_4 && peq_5 && peq_10 && peq_7 && (peq_3 !== '') && (peq_6.trim() !== '') && (peq_9.trim() !== ''))) {
+    if (!(peq_1 && peq_2 && peq_8 && peq_4 && peq_5 && peq_7 && (peq_3 !== '') && (peq_6.trim() !== ''))) {
         alert('Please select answers for all questions.');
     }else{
-        liveSend({"val": 3,"answers": [peq_1.value, peq_2.value, peq_3, peq_4.value, peq_5.value, peq_6, peq_7.value, peq_8.value, peq_9, peq_10.value]});
+        liveSend({"val": 3,"answers": [peq_1.value, peq_2.value, peq_3, peq_4.value, peq_5.value, peq_6, peq_7.value, peq_8.value]});
     }
 
 }
