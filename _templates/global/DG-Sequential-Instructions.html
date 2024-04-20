@@ -74,36 +74,37 @@ function quizHandler(e){
                                     <li>There will be three anonymous participants: <span style="color: red;">Proposer_1</span>, <span style="color: red;">Proposer_2</span>, and the <span style="color: blue;">Receiver</span>.</li>
                                     <li>You will be <b>randomly assigned</b> to either <span style="color: red;">Proposer_1</span>, <span style="color: red;">Proposer_2</span>, or the <span style="color: blue;">Receiver</span>.</li>
                                     <li>Each <span style="color: red;">proposer</span> gets to choose between two actions: <b>‘X’</b> and <b>‘Y’</b>. </li>
-                                        <ul>
-                                            <li>
-                                                If <span style="color: red;">Proposer_1</span> chooses <b>‘X’</b> and <span style="color: red;">Proposer_2</span> chooses <b>‘X’</b>: 
-                                                <ul>
-                                                    <li>
-                                                        <span style="color: red;">Proposer_1</span> gets <span style="color: red;">${{ SI_X1 }}</span>
-                                                    </li>
-                                                    <li>
-                                                        <span style="color: red;">Proposer_2</span> gets <span style="color: red;">${{ SI_X1 }}</span>
-                                                    </li>
-                                                    <li>
-                                                        The <span style="color: blue;">Receiver</span> gets <span style="color: blue;">${{ SI_Y1 }}</span>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li>
-                                                If one of the <span style="color: red;">proposers</span> chooses <b>‘Y’</b> or both of them choose <b>‘Y’</b>: 
-                                                <ul>
-                                                    <li>
-                                                        <span style="color: red;">Proposer_1</span> gets <span style="color: red;">${{ SI_X2 }}</span>
-                                                    </li>
-                                                    <li>
-                                                        <span style="color: red;">Proposer_2</span> gets <span style="color: red;">${{ SI_X2 }}</span>
-                                                    </li>
-                                                    <li>
-                                                        The <span style="color: blue;">Receiver</span> gets <span style="color: blue;">${{ SI_Y2 }}</span>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
+                                    <li>The <b>payoff consequences</b> depend on the <b>joint action</b> of the <span style="color: red;">proposers</span>. Specifically:</li>
+                                    <ul>
+                                        <li>
+                                            If both <span style="color: red;">proposers</span> choose <b>‘X’</b>, then: 
+                                            <ul>
+                                                <li>
+                                                    <span style="color: red;">Proposer_1</span> gets <span style="color: red;">${{ SI_X1 }}</span>
+                                                </li>
+                                                <li>
+                                                    <span style="color: red;">Proposer_2</span> gets <span style="color: red;">${{ SI_X1 }}</span>
+                                                </li>
+                                                <li>
+                                                    The <span style="color: blue;">Receiver</span> gets <span style="color: blue;">${{ SI_Y1 }}</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            If one or two of the <span style="color: red;">proposers</span> choose <b>‘Y’</b>, then: 
+                                            <ul>
+                                                <li>
+                                                    <span style="color: red;">Proposer_1</span> gets <span style="color: red;">${{ SI_X2 }}</span>
+                                                </li>
+                                                <li>
+                                                    <span style="color: red;">Proposer_2</span> gets <span style="color: red;">${{ SI_X2 }}</span>
+                                                </li>
+                                                <li>
+                                                    The <span style="color: blue;">Receiver</span> gets <span style="color: blue;">${{ SI_Y2 }}</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
                                     <li style="color: green;">IMPORTANT: <span style="color: red;">Proposers</span> make their 
                                         decisions <b style="color: green;">sequentially.</b> In other words, <span style="color: red;">Proposer_1</span> 
                                         chooses their action first. Afterwards, <span style="color: red;">Proposer_2</span> is informed about <span style="color: red;">Proposer_1</span>'s
@@ -153,7 +154,7 @@ function quizHandler(e){
                                     <li>
                                         At the end of the activity, you will receive:
                                         <ul>
-                                            <li>Your <b>show-up fee</b> of $ {{ showup_fee }}.</li>
+                                            <li>Your <b>show-up fee</b> of ${{ showup_fee }}.</li>
                                             <li>Your <b>total payoff</b> from the activity.</li>
                                         </ul>
                                     </li>
